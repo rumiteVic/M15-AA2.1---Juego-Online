@@ -34,7 +34,7 @@ public class CharacterMover : MonoBehaviour
     {
         if (gd.grounded && Input.GetButtonDown("Jump"))
         {
-            rb.velocity = transform.up * jumpForce;
+            rb.linearVelocity = transform.up * jumpForce;
         }
     }
     void FixedUpdate()
@@ -95,7 +95,7 @@ public class CharacterMover : MonoBehaviour
     {
         if (airSpeedFollowupCurrent > 0)
         {
-            rb.velocity += transform.TransformDirection(velocity * airSpeedFollowupCurrent - rb.velocity);
+            rb.linearVelocity += transform.TransformDirection(velocity * airSpeedFollowupCurrent - rb.linearVelocity);
         }
         airSpeedFollowupCurrent = 0;
     }

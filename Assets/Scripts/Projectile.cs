@@ -48,7 +48,7 @@ public class Projectile : MonoBehaviour
         }
         if (hit.rigidbody)
         {
-            hit.rigidbody.AddForceAtPosition(rb.velocity * rb.mass * collisionForceMultiplier, this.transform.position);
+            hit.rigidbody.AddForceAtPosition(rb.linearVelocity * rb.mass * collisionForceMultiplier, this.transform.position);
         }
         Destroy(gameObject);
     }
