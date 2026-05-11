@@ -1,10 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
+using Unity.Netcode.Components;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(GroundDetector))]
-public class CharacterMover : MonoBehaviour
+public class CharacterMover : NetworkBehaviour
 {
     public Camera cam;
     public float movementAcceleration;
@@ -23,19 +25,26 @@ public class CharacterMover : MonoBehaviour
     Quaternion velocityRotation;
     Vector3 lastPos;
     Quaternion lastRot;
+
+    private NetworkTransform _transform;
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         gd = GetComponent<GroundDetector>();
         gd.groundedUp.AddListener(DroppedOff);
+        _transform = GetComponent<NetworkTransform>();
     }
     private void Update()
     {
+        if (!IsOwner) return;
         if (gd.grounded && Input.GetButtonDown("Jump"))
         {
             rb.linearVelocity = transform.up * jumpForce;
         }
+        Vector3 mov = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+        _transform.transform.position += mov * speedMovement * Time.deltaTime;
+
     }
     void FixedUpdate()
     {
@@ -66,6 +75,7 @@ public class CharacterMover : MonoBehaviour
         if (gd.grounded)
         {
             Vector3 mov = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+            _transform.transform.position += mov * speedMovement * Time.deltaTime;
             float magnitude = Mathf.Clamp01(mov.magnitude);
             if (magnitude > 0)
             {

@@ -21,7 +21,6 @@ public class CameraController : MonoBehaviour
     public float distanceRecovery = 1;
     private void Start()
     {
-        Cursor.lockState = CursorLockMode.Locked;
         if (cam == null)
             cam = Camera.main;
         verticalRotation = transform.localEulerAngles.x;
