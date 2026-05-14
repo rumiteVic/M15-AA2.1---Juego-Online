@@ -20,6 +20,10 @@ public class RelayManager : MonoBehaviour
     public InputField joinInput;
     public static List<CharacterMover> players = new List<CharacterMover>();
 
+    public int cantidadPlayers = 3;
+    int min = 1;
+    public Text cantidad;
+
     async void Start()
     {
         //Enable unity services
@@ -30,6 +34,7 @@ public class RelayManager : MonoBehaviour
         //Subscribing to button events
         hostButton.onClick.AddListener(CreateRelay);
         joinButton.onClick.AddListener(() => JoinRelay(joinInput.text));
+        cantidad.text = cantidadPlayers.ToString();
     }
 
     /// <summary>
@@ -38,7 +43,7 @@ public class RelayManager : MonoBehaviour
     async void CreateRelay()
     {
         //Request for a new room using (3) maximum players (connections)
-        Allocation allocation = await RelayService.Instance.CreateAllocationAsync(3);
+        Allocation allocation = await RelayService.Instance.CreateAllocationAsync(cantidadPlayers);
         //Using created room, get join code for other players
         string joinCode = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);
         codeText.text = joinCode;
@@ -69,6 +74,16 @@ public class RelayManager : MonoBehaviour
 
         //Join the room as a guest player
         NetworkManager.Singleton.StartClient();
+    }
+
+    public void ChangeCantidadMaxOfPlayers(int value)
+    {
+        cantidadPlayers += value;
+        if(cantidadPlayers < min)
+        {
+            cantidadPlayers = min;
+        }
+        cantidad.text = cantidadPlayers.ToString();
     }
 
 

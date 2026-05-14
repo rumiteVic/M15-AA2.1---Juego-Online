@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Cinemachine;
 using Unity.Netcode;
 using Unity.Netcode.Components;
 using UnityEngine;
@@ -26,18 +27,34 @@ public class CharacterMover : NetworkBehaviour
     Vector3 lastPos;
     Quaternion lastRot;
 
+    public CinemachineCamera playerCamera;
+    public AudioListener playerAudioListener;
+
     private NetworkTransform _transform;
-    // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         rb = GetComponent<Rigidbody>();
         gd = GetComponent<GroundDetector>();
         gd.groundedUp.AddListener(DroppedOff);
-        _transform = GetComponent<NetworkTransform>();
+    }
+    // Start is called before the first frame update
+    public override void OnNetworkSpawn()
+    {
+        
+        if (!IsOwner)
+        {
+            this.enabled = false;
+            playerAudioListener.enabled = false;
+            playerCamera.Priority = 0;
+            return;
+            //Destroy(GetComponent<Rigidbody>());
+        }
+        playerCamera.Priority = 100;
+        playerAudioListener.enabled = true;
+        RelayManager.players.Add(this);
     }
     private void Update()
     {
-        if (!IsOwner) return;
         if (gd.grounded && Input.GetButtonDown("Jump"))
         {
             rb.linearVelocity = transform.up * jumpForce;
@@ -75,7 +92,6 @@ public class CharacterMover : NetworkBehaviour
         if (gd.grounded)
         {
             Vector3 mov = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
-            _transform.transform.position += mov * speedMovement * Time.deltaTime;
             float magnitude = Mathf.Clamp01(mov.magnitude);
             if (magnitude > 0)
             {
