@@ -24,6 +24,9 @@ public class RelayManager : MonoBehaviour
     int min = 1;
     public Text cantidad;
 
+    public Button less;
+    public Button more;
+
     async void Start()
     {
         //Enable unity services
@@ -55,6 +58,8 @@ public class RelayManager : MonoBehaviour
 
         //Start the room as the host player
         NetworkManager.Singleton.StartHost();
+        more.enabled = false;
+        less.enabled = false;
     }
 
     /// <summary>
@@ -74,6 +79,8 @@ public class RelayManager : MonoBehaviour
 
         //Join the room as a guest player
         NetworkManager.Singleton.StartClient();
+        more.enabled = false;
+        less.enabled = false;
     }
 
     public void ChangeCantidadMaxOfPlayers(int value)

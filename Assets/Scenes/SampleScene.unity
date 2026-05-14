@@ -9123,6 +9123,8 @@ MonoBehaviour:
   joinInput: {fileID: 3847735328486266197}
   cantidadPlayers: 3
   cantidad: {fileID: 1923545434}
+  less: {fileID: 1307871095}
+  more: {fileID: 416947454}
 --- !u!4 &881739677
 Transform:
   m_ObjectHideFlags: 0
