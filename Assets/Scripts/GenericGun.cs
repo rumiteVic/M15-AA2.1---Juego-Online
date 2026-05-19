@@ -2,8 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
-using Unity.Netcode;
-public class GenericGun : NetworkBehaviour
+
+public class GenericGun : MonoBehaviour
 {
     public int clipMax = 30;
     public int clipCurrent = 30;
@@ -34,7 +34,7 @@ public class GenericGun : NetworkBehaviour
         transform.localRotation = Quaternion.Lerp(transform.localRotation, originalRotation, rotationRecover * Time.deltaTime);
         if(clipCurrent > 0)
         {
-            if ((Input.GetButtonDown("Fire") || automatic && Input.GetButton("Fire")) && Time.time >= nextFire)
+            if ((InputManager.actions.Player.Attack.WasPressedThisFrame() || automatic && InputManager.actions.Player.Attack.IsPressed()) && Time.time >= nextFire)
             {
                 nextFire = Time.time + fireTime;
                 Fire();

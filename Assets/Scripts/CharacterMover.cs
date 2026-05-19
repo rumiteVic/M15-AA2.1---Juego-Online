@@ -26,23 +26,17 @@ public class CharacterMover : NetworkBehaviour
     Quaternion velocityRotation;
     Vector3 lastPos;
     Quaternion lastRot;
-
     public CinemachineCamera playerCamera;
     public AudioListener playerAudioListener;
-
-    private NetworkTransform _transform;
-
-    void Awake()
+    // Start is called before the first frame update
+     void Awake()
     {
         rb = GetComponent<Rigidbody>();
         gd = GetComponent<GroundDetector>();
         gd.groundedUp.AddListener(DroppedOff);
-        _transform = GetComponent<NetworkTransform>();
     }
-    // Start is called before the first frame update
     public override void OnNetworkSpawn()
     {
-        
         if (!IsOwner)
         {
             this.enabled = false;
@@ -57,10 +51,10 @@ public class CharacterMover : NetworkBehaviour
     }
     private void Update()
     {
-        if (gd.grounded && Input.GetButtonDown("Jump"))
+        if (gd.grounded && InputManager.actions.Player.Jump.WasPressedThisFrame())
         {
             rb.linearVelocity = transform.up * jumpForce;
-        }      
+        }
     }
     void FixedUpdate()
     {
@@ -90,13 +84,16 @@ public class CharacterMover : NetworkBehaviour
     {
         if (gd.grounded)
         {
-            Vector3 mov = new Vector3(Input.GetAxis("Horizontal"), 0 ,  Input.GetAxis("Vertical"));
+            Vector3 mov = InputManager.actions.Player.Move.ReadValue<Vector2>();
             float magnitude = Mathf.Clamp01(mov.magnitude);
             if (magnitude > 0)
             {
-                mov = cam.transform.TransformDirection(mov);
+                Vector3 movForward = cam.transform.forward * mov.y;
+                Vector3 movRight = cam.transform.right * mov.x;
 
-                mov = Vector3.ProjectOnPlane(mov, transform.up);
+                mov = movForward + movRight;
+
+                mov.y = 0;
 
                 mov = mov.normalized * magnitude;
             }
