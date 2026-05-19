@@ -31,11 +31,13 @@ public class CharacterMover : NetworkBehaviour
     public AudioListener playerAudioListener;
 
     private NetworkTransform _transform;
+
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
         gd = GetComponent<GroundDetector>();
         gd.groundedUp.AddListener(DroppedOff);
+        _transform = GetComponent<NetworkTransform>();
     }
     // Start is called before the first frame update
     public override void OnNetworkSpawn()
@@ -58,10 +60,7 @@ public class CharacterMover : NetworkBehaviour
         if (gd.grounded && Input.GetButtonDown("Jump"))
         {
             rb.linearVelocity = transform.up * jumpForce;
-        }
-        Vector3 mov = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
-        _transform.transform.position += mov * speedMovement * Time.deltaTime;
-
+        }      
     }
     void FixedUpdate()
     {
@@ -91,7 +90,7 @@ public class CharacterMover : NetworkBehaviour
     {
         if (gd.grounded)
         {
-            Vector3 mov = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+            Vector3 mov = new Vector3(Input.GetAxis("Horizontal"), 0 ,  Input.GetAxis("Vertical"));
             float magnitude = Mathf.Clamp01(mov.magnitude);
             if (magnitude > 0)
             {

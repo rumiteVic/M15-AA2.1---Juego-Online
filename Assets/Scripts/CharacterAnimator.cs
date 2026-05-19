@@ -31,14 +31,15 @@ public class CharacterAnimator : MonoBehaviour
     }
     void Update()
     {
-        anim.SetFloat("Sideways", cm.velocity.x);
-        anim.SetFloat("Upwards", cm.velocity.y);
-        anim.SetFloat("Forward", cm.velocity.z);
-        anim.SetFloat("Rotation", cm.velocityAngular * rotationScale);
-        anim.SetBool("Grounded", gd.grounded);
-
+        if (cm.IsOwner)
+        {
+            anim.SetFloat("Sideways", cm.velocity.x);
+            anim.SetFloat("Upwards", cm.velocity.y);
+            anim.SetFloat("Forward", cm.velocity.z);
+            anim.SetFloat("Rotation", cm.velocityAngular * rotationScale);
+            anim.SetBool("Grounded", gd.grounded);
+        }
         FixLookat();
-
         gunPivot.LookAt(lookat);
     }
 
