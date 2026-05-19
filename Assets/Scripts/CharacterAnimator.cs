@@ -1,8 +1,8 @@
 
 using UnityEngine;
-
+using Unity.Netcode;
 [RequireComponent(typeof(Animator))]
-public class CharacterAnimator : MonoBehaviour
+public class CharacterAnimator : NetworkBehaviour
 {
     public GroundDetector gd;
     public CharacterMover cm;
@@ -38,9 +38,9 @@ public class CharacterAnimator : MonoBehaviour
             anim.SetFloat("Forward", cm.velocity.z);
             anim.SetFloat("Rotation", cm.velocityAngular * rotationScale);
             anim.SetBool("Grounded", gd.grounded);
+            FixLookat();
+            gunPivot.LookAt(lookat);
         }
-        FixLookat();
-        gunPivot.LookAt(lookat);
     }
 
     private void FixLookat()

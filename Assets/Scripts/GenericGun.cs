@@ -2,8 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
-
-public class GenericGun : MonoBehaviour
+using Unity.Netcode;
+public class GenericGun : NetworkBehaviour
 {
     public int clipMax = 30;
     public int clipCurrent = 30;
