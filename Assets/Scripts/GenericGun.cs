@@ -2,8 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
-
-public class GenericGun : MonoBehaviour
+using Unity.Netcode;
+public class GenericGun : NetworkBehaviour
 {
     public int clipMax = 30;
     public int clipCurrent = 30;
@@ -48,7 +48,7 @@ public class GenericGun : MonoBehaviour
     public void Fire()
     {
         clipCurrent--;
-        Destroy(Instantiate(bullet, firePoint.position, firePoint.rotation), 10);
+        SpawnObjectServerRPC();
         onFire.Invoke();
         StartCoroutine(Knockback_Corutine());
     }
@@ -64,5 +64,13 @@ public class GenericGun : MonoBehaviour
         yield return new WaitForSeconds(reloadTime);
         clipCurrent = clipMax;
         reloading = false;
+    }
+
+    [ServerRpc]
+    void SpawnObjectServerRPC()
+    {
+        GameObject go = Instantiate(bullet, firePoint.position, firePoint.rotation);
+        go.GetComponent<NetworkObject>().Spawn();
+
     }
 }
