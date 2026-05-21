@@ -1965,7 +1965,18 @@ MonoBehaviour:
       MinSecondsBetweenUpdates: 0
       MaxSecondsBetweenUpdates: 0
     m_InternalValue: 0
+  isDead:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
+    m_InternalValue: 0
+  inicio:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
+    m_InternalValue: {x: 0, y: 0, z: 0}
   rb: {fileID: 1649346231193908793}
+  transformer: {fileID: 8453166341533834385}
 --- !u!1001 &5102604667650639870
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2778,6 +2789,7 @@ MonoBehaviour:
   rotationRecover: 20
   knockbackPosition: {x: 0.01, y: 0.1, z: -0.2}
   knockbackRotation: {x: 35, y: 5, z: 5}
+  healthy: {fileID: 6437810583661057467}
 --- !u!54 &135726824530327616
 Rigidbody:
   m_ObjectHideFlags: 0

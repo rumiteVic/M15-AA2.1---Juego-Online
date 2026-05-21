@@ -5221,7 +5221,7 @@ MonoBehaviour:
   RotationMaxInterpolationTime: 0.1
   ScaleLerpSmoothing: 1
   ScaleMaxInterpolationTime: 0.1
-  AuthorityMode: 0
+  AuthorityMode: 1
   TickSyncChildren: 0
   UseUnreliableDeltas: 0
   SyncPositionX: 1
@@ -5305,11 +5305,12 @@ MonoBehaviour:
   forceMax: {x: 1, y: 1, z: 10000}
   layers:
     serializedVersion: 2
-    m_Bits: 55
+    m_Bits: 4294967295
   collisionForceMultiplier: 1
   radius: 0.1
   spawnOnCollide: {fileID: 802939741174777362, guid: 5711a24ec9f4fed488a8630eae21dde6, type: 3}
   rb: {fileID: 7610373020928527075}
+  ownerID: 0
 --- !u!1 &3906834986696007104
 GameObject:
   m_ObjectHideFlags: 0

@@ -13,6 +13,7 @@ public class Projectile : NetworkBehaviour
     public GameObject spawnOnCollide;
     public Rigidbody rb;
 
+    public Health healthy = null;
     public ulong ownerID;
     int damage = 21;
     Vector3 lastPos;
@@ -50,20 +51,16 @@ public class Projectile : NetworkBehaviour
         if (hit.rigidbody)
         {
             hit.rigidbody.AddForceAtPosition(rb.linearVelocity * rb.mass * collisionForceMultiplier, this.transform.position);
-            Health health = hit.rigidbody.GetComponent<Health>();
-            if(health != null)
+            Health targetHealth = hit.rigidbody.GetComponent<Health>();
+            if(targetHealth != null)
             {
-                if(health.OwnerClientId != ownerID)
-                {
-                    health.TakeDamage(damage);
-                    DeleteCosa();
-                }
+                targetHealth.PlsDoDamageRpc(damage, ownerID);
             }
         }
         DeleteCosa();
     }
 
-    [ServerRpc]
+    [Rpc(SendTo.Server)]
     void SpawnObjectServerRPC(Vector3 point, Vector3 normal)
     {
         GameObject go = Instantiate(spawnOnCollide, point, Quaternion.LookRotation(normal));
@@ -73,7 +70,7 @@ public class Projectile : NetworkBehaviour
 
     void DeleteCosa()
     {
-        if (IsServer)
+        if (IsServer && NetworkObject.IsSpawned)
         {
             NetworkObject.Despawn(true);
         }

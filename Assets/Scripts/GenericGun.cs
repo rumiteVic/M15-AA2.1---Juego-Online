@@ -22,6 +22,8 @@ public class GenericGun : NetworkBehaviour
     public Vector3 knockbackRotation;
     Vector3 originalPosition;
     Quaternion originalRotation;
+
+    public Health healthy;
     private void Start()
     {
         originalPosition = transform.localPosition;
@@ -47,8 +49,12 @@ public class GenericGun : NetworkBehaviour
     }
     public void Fire()
     {
+        if (!IsOwner)
+        {
+            return;
+        }
         clipCurrent--;
-        SpawnObjectServerRPC();
+        RequestSpawnBulletServerRpc(OwnerClientId);
         onFire.Invoke();
         StartCoroutine(Knockback_Corutine());
     }
@@ -65,14 +71,18 @@ public class GenericGun : NetworkBehaviour
         clipCurrent = clipMax;
         reloading = false;
     }
-
     [Rpc(SendTo.Server)]
-    void SpawnObjectServerRPC()
+    private void RequestSpawnBulletServerRpc(ulong shooterID)
     {
         GameObject go = Instantiate(bullet, firePoint.position, firePoint.rotation);
         Projectile bullete = go.GetComponent<Projectile>();
-        bullete.ownerID = OwnerClientId;
+        
+        if (bullete != null)
+        {
+            bullete.ownerID = shooterID;
+            bullete.healthy = healthy;
+        }
+        
         go.GetComponent<NetworkObject>().Spawn();
-
     }
 }
