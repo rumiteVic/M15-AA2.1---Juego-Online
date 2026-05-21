@@ -66,10 +66,12 @@ public class GenericGun : NetworkBehaviour
         reloading = false;
     }
 
-    [ServerRpc]
+    [Rpc(SendTo.Server)]
     void SpawnObjectServerRPC()
     {
         GameObject go = Instantiate(bullet, firePoint.position, firePoint.rotation);
+        Projectile bullete = go.GetComponent<Projectile>();
+        bullete.ownerID = OwnerClientId;
         go.GetComponent<NetworkObject>().Spawn();
 
     }

@@ -11,9 +11,10 @@ public class Projectile : NetworkBehaviour
     public float collisionForceMultiplier = 2f;
     public float radius = .1f;
     public GameObject spawnOnCollide;
-    [HideInInspector]
     public Rigidbody rb;
 
+    public ulong ownerID;
+    int damage = 21;
     Vector3 lastPos;
     void Start()
     {
@@ -26,7 +27,6 @@ public class Projectile : NetworkBehaviour
 
     private void FixedUpdate()
     {
-        if (!IsServer) return;
         Vector3 dir = transform.position - lastPos;
 
         Debug.DrawRay(lastPos, dir, Color.blue, disappearTime);
@@ -50,6 +50,15 @@ public class Projectile : NetworkBehaviour
         if (hit.rigidbody)
         {
             hit.rigidbody.AddForceAtPosition(rb.linearVelocity * rb.mass * collisionForceMultiplier, this.transform.position);
+            Health health = hit.rigidbody.GetComponent<Health>();
+            if(health != null)
+            {
+                if(health.OwnerClientId != ownerID)
+                {
+                    health.TakeDamage(damage);
+                    DeleteCosa();
+                }
+            }
         }
         DeleteCosa();
     }
@@ -64,6 +73,10 @@ public class Projectile : NetworkBehaviour
 
     void DeleteCosa()
     {
-        Destroy(gameObject);
+        if (IsServer)
+        {
+            NetworkObject.Despawn(true);
+        }
     }
+
 }

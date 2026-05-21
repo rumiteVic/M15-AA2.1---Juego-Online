@@ -1723,6 +1723,7 @@ GameObject:
   - component: {fileID: 7636923212485259045}
   - component: {fileID: 8453166341533834385}
   - component: {fileID: 1385062870550042579}
+  - component: {fileID: 6437810583661057467}
   m_Layer: 3
   m_Name: Player1
   m_TagString: Untagged
@@ -1936,6 +1937,35 @@ MonoBehaviour:
   UseRigidBodyForMotion: 0
   AutoUpdateKinematicState: 0
   AutoSetKinematicOnDespawn: 1
+--- !u!114 &6437810583661057467
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9157884698331656775}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2221b87ab11b6334a958b08944900138, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  health:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
+    m_InternalValue: 100
+  vidaActual:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
+    m_InternalValue: 0
+  puntuation:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
+    m_InternalValue: 0
+  rb: {fileID: 1649346231193908793}
 --- !u!1001 &5102604667650639870
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2732,6 +2762,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3b238333b4b1284d9b1ca9e4480d314, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   clipMax: 30
   clipCurrent: 30
   automatic: 1
