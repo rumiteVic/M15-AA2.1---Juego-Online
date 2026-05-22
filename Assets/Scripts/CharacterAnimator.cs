@@ -1,8 +1,8 @@
 
 using UnityEngine;
-
+using Unity.Netcode;
 [RequireComponent(typeof(Animator))]
-public class CharacterAnimator : MonoBehaviour
+public class CharacterAnimator : NetworkBehaviour
 {
     public GroundDetector gd;
     public CharacterMover cm;
@@ -31,15 +31,16 @@ public class CharacterAnimator : MonoBehaviour
     }
     void Update()
     {
-        anim.SetFloat("Sideways", cm.velocity.x);
-        anim.SetFloat("Upwards", cm.velocity.y);
-        anim.SetFloat("Forward", cm.velocity.z);
-        anim.SetFloat("Rotation", cm.velocityAngular * rotationScale);
-        anim.SetBool("Grounded", gd.grounded);
-
-        FixLookat();
-
-        gunPivot.LookAt(lookat);
+        if (cm.IsOwner)
+        {
+            anim.SetFloat("Sideways", cm.velocity.x);
+            anim.SetFloat("Upwards", cm.velocity.y);
+            anim.SetFloat("Forward", cm.velocity.z);
+            anim.SetFloat("Rotation", cm.velocityAngular * rotationScale);
+            anim.SetBool("Grounded", gd.grounded);
+            FixLookat();
+            gunPivot.LookAt(lookat);
+        }
     }
 
     private void FixLookat()

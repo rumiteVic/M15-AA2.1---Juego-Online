@@ -1,10 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Cinemachine;
+using Unity.Netcode;
+using Unity.Netcode.Components;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(GroundDetector))]
-public class CharacterMover : MonoBehaviour
+public class CharacterMover : NetworkBehaviour
 {
     public Camera cam;
     public float movementAcceleration;
@@ -23,16 +26,32 @@ public class CharacterMover : MonoBehaviour
     Quaternion velocityRotation;
     Vector3 lastPos;
     Quaternion lastRot;
+    public CinemachineCamera playerCamera;
+    public AudioListener playerAudioListener;
     // Start is called before the first frame update
-    void Start()
+     void Awake()
     {
         rb = GetComponent<Rigidbody>();
         gd = GetComponent<GroundDetector>();
         gd.groundedUp.AddListener(DroppedOff);
     }
+    public override void OnNetworkSpawn()
+    {
+        if (!IsOwner)
+        {
+            this.enabled = false;
+            playerAudioListener.enabled = false;
+            playerCamera.Priority = 0;
+            return;
+            //Destroy(GetComponent<Rigidbody>());
+        }
+        playerCamera.Priority = 100;
+        playerAudioListener.enabled = true;
+        RelayManager.players.Add(this);
+    }
     private void Update()
     {
-        if (gd.grounded && Input.GetButtonDown("Jump"))
+        if (gd.grounded && InputManager.actions.Player.Jump.WasPressedThisFrame())
         {
             rb.linearVelocity = transform.up * jumpForce;
         }
@@ -65,13 +84,16 @@ public class CharacterMover : MonoBehaviour
     {
         if (gd.grounded)
         {
-            Vector3 mov = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+            Vector3 mov = InputManager.actions.Player.Move.ReadValue<Vector2>();
             float magnitude = Mathf.Clamp01(mov.magnitude);
             if (magnitude > 0)
             {
-                mov = cam.transform.TransformDirection(mov);
+                Vector3 movForward = cam.transform.forward * mov.y;
+                Vector3 movRight = cam.transform.right * mov.x;
 
-                mov = Vector3.ProjectOnPlane(mov, transform.up);
+                mov = movForward + movRight;
+
+                mov.y = 0;
 
                 mov = mov.normalized * magnitude;
             }

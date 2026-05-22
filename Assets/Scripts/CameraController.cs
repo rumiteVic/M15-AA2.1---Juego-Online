@@ -21,16 +21,17 @@ public class CameraController : MonoBehaviour
     public float distanceRecovery = 1;
     private void Start()
     {
-        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.lockState = CursorLockMode.None;
         if (cam == null)
             cam = Camera.main;
         verticalRotation = transform.localEulerAngles.x;
     }
     void Update()
     {
-        float horizontal = Input.GetAxis("Mouse X") * sensitivity.x;
+        Vector2 look = InputManager.actions.Player.Look.ReadValue<Vector2>();
+        float horizontal = look.x * sensitivity.x;
         transform.Rotate(Vector3.up, horizontal);
-        float vertical = Input.GetAxis("Mouse Y") * sensitivity.y;
+        float vertical = look.y * sensitivity.y;
         verticalRotation = Mathf.Clamp(verticalRotation + vertical, -verticalRotationMax, verticalRotationMax);
         transform.localEulerAngles = new Vector3(verticalRotation, transform.localEulerAngles.y, 0.0f);
     }

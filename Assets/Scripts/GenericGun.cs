@@ -2,8 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
-
-public class GenericGun : MonoBehaviour
+using Unity.Netcode;
+public class GenericGun : NetworkBehaviour
 {
     public int clipMax = 30;
     public int clipCurrent = 30;
@@ -22,6 +22,8 @@ public class GenericGun : MonoBehaviour
     public Vector3 knockbackRotation;
     Vector3 originalPosition;
     Quaternion originalRotation;
+
+    public Health healthy;
     private void Start()
     {
         originalPosition = transform.localPosition;
@@ -34,7 +36,7 @@ public class GenericGun : MonoBehaviour
         transform.localRotation = Quaternion.Lerp(transform.localRotation, originalRotation, rotationRecover * Time.deltaTime);
         if(clipCurrent > 0)
         {
-            if ((Input.GetButtonDown("Fire") || automatic && Input.GetButton("Fire")) && Time.time >= nextFire)
+            if ((InputManager.actions.Player.Attack.WasPressedThisFrame() || automatic && InputManager.actions.Player.Attack.IsPressed()) && Time.time >= nextFire)
             {
                 nextFire = Time.time + fireTime;
                 Fire();
@@ -47,8 +49,13 @@ public class GenericGun : MonoBehaviour
     }
     public void Fire()
     {
+        //Se dispara solo el owner y no ambos al mismo tiempo
+        if (!IsOwner)
+        {
+            return;
+        }
         clipCurrent--;
-        Destroy(Instantiate(bullet, firePoint.position, firePoint.rotation), 10);
+        RequestSpawnBulletServerRpc(OwnerClientId);
         onFire.Invoke();
         StartCoroutine(Knockback_Corutine());
     }
@@ -64,5 +71,15 @@ public class GenericGun : MonoBehaviour
         yield return new WaitForSeconds(reloadTime);
         clipCurrent = clipMax;
         reloading = false;
+    }
+    //Spawneamos la bala en el server y le damos el id del que dispara
+    [Rpc(SendTo.Server)]
+    private void RequestSpawnBulletServerRpc(ulong shooterID)
+    {
+        GameObject go = Instantiate(bullet, firePoint.position, firePoint.rotation);
+        Projectile bullete = go.GetComponent<Projectile>();
+        bullete.ownerID = shooterID;
+        bullete.healthy = healthy;
+        go.GetComponent<NetworkObject>().Spawn();
     }
 }
