@@ -23,7 +23,7 @@ public class GenericGun : NetworkBehaviour
     Vector3 originalPosition;
     Quaternion originalRotation;
 
-    public Health healthy;
+    public Score score;
     private void Start()
     {
         originalPosition = transform.localPosition;
@@ -79,7 +79,7 @@ public class GenericGun : NetworkBehaviour
         GameObject go = Instantiate(bullet, firePoint.position, firePoint.rotation);
         Projectile bullete = go.GetComponent<Projectile>();
         bullete.ownerID = shooterID;
-        bullete.healthy = healthy;
+        bullete.score = score;
         go.GetComponent<NetworkObject>().Spawn();
     }
 }

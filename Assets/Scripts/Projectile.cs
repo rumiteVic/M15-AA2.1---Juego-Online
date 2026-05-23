@@ -13,7 +13,7 @@ public class Projectile : NetworkBehaviour
     public GameObject spawnOnCollide;
     public Rigidbody rb;
 
-    public Health healthy = null;
+    public Score score = null;
     public ulong ownerID;
     int damage = 21;
     Vector3 lastPos;

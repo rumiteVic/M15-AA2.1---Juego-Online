@@ -78,6 +78,7 @@ public class CameraController : MonoBehaviour
         Gizmos.color = distanceDesired > distanceCurrent ? Color.green : Color.red;
         Gizmos.DrawWireSphere(cam.transform.position, collisionRadius);
     }
+    //Hacer que la camara tenga de target al que se acaba de conectar
     public void SetTarget(Transform t)
     {
         lookAt = t;

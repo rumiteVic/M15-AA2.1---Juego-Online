@@ -44,11 +44,15 @@ public class CharacterMover : NetworkBehaviour
             //Destroy(GetComponent<Rigidbody>());
         }
         cam = Camera.main;
-        //Hacer que la camara lo siga pasandole sus cosas a la camara
+        //Hacer que la camara lo siga pasandole sus cosas seleccionando la camara
+        //Más en concreto al padre de la camara que tiene esos scripts
         CameraController camCtrl = cam.GetComponentInParent<CameraController>();
         ObjectFollower follower = cam.GetComponentInParent<ObjectFollower>();
+        //Hacemos que lo siga
         follower.follow = followStuff;
+        //Y hacemos que se coloque bien
         follower.transform.position = followStuff.position + follower.offset;
+        //La camara pone de target al gameObject vacio dentro del player para que lo siga
         camCtrl.SetTarget(followStuff);
 
         RelayManager.players.Add(this);

@@ -518,6 +518,7 @@ GameObject:
   - component: {fileID: 2200744079322012793}
   - component: {fileID: 4217597557470481587}
   - component: {fileID: 3475948544619574562}
+  - component: {fileID: 9216378835816587263}
   m_Layer: 3
   m_Name: Player1
   m_TagString: Untagged
@@ -748,11 +749,6 @@ MonoBehaviour:
       MinSecondsBetweenUpdates: 0
       MaxSecondsBetweenUpdates: 0
     m_InternalValue: 0
-  puntuation:
-    UpdateTraits:
-      MinSecondsBetweenUpdates: 0
-      MaxSecondsBetweenUpdates: 0
-    m_InternalValue: 0
   inicio:
     UpdateTraits:
       MinSecondsBetweenUpdates: 0
@@ -760,6 +756,25 @@ MonoBehaviour:
     m_InternalValue: {x: 0, y: 0, z: 0}
   rb: {fileID: 5613241878850795993}
   transformer: {fileID: 2200744079322012793}
+  score: {fileID: 0}
+--- !u!114 &9216378835816587263
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1516154602555341472}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6acc862c94018ae42afb057a68ddc14d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  puntuation:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
+    m_InternalValue: 0
 --- !u!1 &1615412971252937888
 GameObject:
   m_ObjectHideFlags: 0
@@ -866,7 +881,7 @@ MonoBehaviour:
   rotationRecover: 20
   knockbackPosition: {x: 0.01, y: 0.1, z: -0.2}
   knockbackRotation: {x: 35, y: 5, z: 5}
-  healthy: {fileID: 3475948544619574562}
+  score: {fileID: 0}
 --- !u!54 &5896154812317239945
 Rigidbody:
   m_ObjectHideFlags: 0
