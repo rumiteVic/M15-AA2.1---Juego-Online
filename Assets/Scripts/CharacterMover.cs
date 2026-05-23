@@ -26,8 +26,8 @@ public class CharacterMover : NetworkBehaviour
     Quaternion velocityRotation;
     Vector3 lastPos;
     Quaternion lastRot;
-    public CinemachineCamera playerCamera;
-    public AudioListener playerAudioListener;
+
+    public Transform followStuff;
     // Start is called before the first frame update
      void Awake()
     {
@@ -40,17 +40,22 @@ public class CharacterMover : NetworkBehaviour
         if (!IsOwner)
         {
             this.enabled = false;
-            playerAudioListener.enabled = false;
-            playerCamera.Priority = 0;
             return;
             //Destroy(GetComponent<Rigidbody>());
         }
-        playerCamera.Priority = 100;
-        playerAudioListener.enabled = true;
+        cam = Camera.main;
+        //Hacer que la camara lo siga pasandole sus cosas a la camara
+        CameraController camCtrl = cam.GetComponentInParent<CameraController>();
+        ObjectFollower follower = cam.GetComponentInParent<ObjectFollower>();
+        follower.follow = followStuff;
+        follower.transform.position = followStuff.position + follower.offset;
+        camCtrl.SetTarget(followStuff);
+
         RelayManager.players.Add(this);
     }
     private void Update()
     {
+        if(!IsOwner) return;
         if (gd.grounded && InputManager.actions.Player.Jump.WasPressedThisFrame())
         {
             rb.linearVelocity = transform.up * jumpForce;
@@ -58,6 +63,7 @@ public class CharacterMover : NetworkBehaviour
     }
     void FixedUpdate()
     {
+        if(!IsOwner) return;
         Velocity();
         Movement();
 

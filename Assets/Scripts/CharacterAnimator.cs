@@ -19,18 +19,24 @@ public class CharacterAnimator : NetworkBehaviour
     public float lookAtSpeed = 10;
     public float lookAtDistance = 10;
     Vector3 lookat;
-    private void Start()
+    void Awake()
     {
         anim = GetComponent<Animator>();
+    }
+    public override void OnNetworkSpawn()
+    {
+        if(!IsOwner) return;
+        
         if(cam == null)
         {
             cam = Camera.main;
         }
-
+        cameraLookAt = cam.GetComponent<RaycastLookAt>();
         lookat = cameraLookAt.lookingAt;
     }
     void Update()
     {
+        if(!IsOwner) return;
         if (cm.IsOwner)
         {
             anim.SetFloat("Sideways", cm.velocity.x);
@@ -70,7 +76,11 @@ public class CharacterAnimator : NetworkBehaviour
         anim.SetIKPosition(AvatarIKGoal.LeftHand, gunLeftHand.position);
         anim.SetIKRotation(AvatarIKGoal.RightHand, gunRightHand.rotation);
         anim.SetIKRotation(AvatarIKGoal.LeftHand, gunLeftHand.rotation);
-        anim.SetLookAtPosition(lookat);
-        anim.SetLookAtWeight(1, 1, 1, 1);
+        if (IsOwner)
+        {
+            anim.SetLookAtPosition(lookat);
+            anim.SetLookAtWeight(1, 1, 1, 1);
+        }
+        
     }
 }

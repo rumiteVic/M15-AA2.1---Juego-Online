@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class CameraController : MonoBehaviour
 {
     public Transform lookAt;
@@ -19,11 +20,16 @@ public class CameraController : MonoBehaviour
     float distanceDesired;
     float distanceCurrent;
     public float distanceRecovery = 1;
-    private void Start()
+    public ObjectFollower follow;
+    public  void Start()
     {
-        Cursor.lockState = CursorLockMode.None;
         if (cam == null)
+        {
             cam = Camera.main;
+        }
+        Cursor.lockState = CursorLockMode.None;
+        
+            
         verticalRotation = transform.localEulerAngles.x;
     }
     void Update()
@@ -71,5 +77,9 @@ public class CameraController : MonoBehaviour
         Gizmos.DrawWireSphere(transform.position, distanceMax);
         Gizmos.color = distanceDesired > distanceCurrent ? Color.green : Color.red;
         Gizmos.DrawWireSphere(cam.transform.position, collisionRadius);
+    }
+    public void SetTarget(Transform t)
+    {
+        lookAt = t;
     }
 }
