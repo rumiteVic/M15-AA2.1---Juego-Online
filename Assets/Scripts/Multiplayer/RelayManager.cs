@@ -22,6 +22,7 @@ public class RelayManager : MonoBehaviour
 
     public int cantidadPlayers = 3;
     int min = 1;
+    int max = 16;
     public Text cantidad;
 
     public Button less;
@@ -90,7 +91,12 @@ public class RelayManager : MonoBehaviour
         {
             cantidadPlayers = min;
         }
+        if(cantidadPlayers >= max)
+        {
+            cantidadPlayers = max;
+        }
         cantidad.text = cantidadPlayers.ToString();
+
     }
 
 
